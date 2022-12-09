@@ -24,7 +24,7 @@ This rotation of the display only works for the ```Raspberry Pi displays``` ,the
 - Now open the ```New terminal console```.
 
 
-## RASPBERRY PI SCREEN ROTATION:
+## RASPBERRY PI/ Wave share SCREEN ROTATION:
 ### 1. Edit boot/config.txt
 - From your computer, open Terminal (Mac) or Command Prompt (Windows) and connect to your Raspberry Pi via SSH.
 
@@ -149,5 +149,64 @@ the press ```ctrl + x``` and then press save (y/n)? ```Y``` , the press enter fi
  ### 4. Restart your Pi
 
 ```sudo reboot```
+
+# Making the TouchUI for the machine 
+
+As the orientation of the display to the machine is portrait mode (i.e, 90 vertically) , I have used the [Volterrra Touch UI](https://github.com/FracktalWorks/Volterra400Dual2022TouchUI) as a reference and clone the repository.
+
+-  Open the **MainGUI.ui** file in the cloned repository using **Qt Designer**.
+
+# Installing the Qt designer in windows 
+
+Text based tutuorial : https://www.techwithtim.net/tutorials/pyqt5-tutorial/basic-gui-application/ Setting up with
+
+1) you can use the official *[Qt designer](https://build-system.fman.io/qt-designer-download)* site for downloading the .exe setup file and install it
+
+2) Or you can you the command line installation as suggested below
+
+- Open **command prompt** and paste the below command
+
+```pip install PyQt5Designer```
+
+```pip install Pyqt5-tools```
+
+```pip install pyuic5```
+
+now search for the desinger.exe 
+
+**[Tutorial of Qt designer](https://www.youtube.com/watch?v=Vde5SH8e1OQ)**
+
+-  Make the required changes in the file using  Qt designer software (Open ```.ui``` files with qt desinger only ).
+
+
+-  Then try to compile the .ui file to .py file using the below steps mentioned
+
+**Installation of pycharm**  Pycharm: https://pythonpyqt.com/how-to-install-pyqt5-in-pycharm/
+
+
+# Converting the Qt designer .ui file to .py file using pycharm external tools
+
+Lets learn how to..,
+
+[Convert Qt Designer ui file to Python file using  Pycharm External Tools](https://youtu.be/1CZ2RZ6ffRo )
+______________________________________
+
+
+
+1) Setup External tools in pycharm.
+
+Click on the ```File > settings``` option on the top left and click on the ```tools > external tools``` click on ```Create tool / Add icon +``` 
+
+3) Convert .ui file from pyqt5 to .py (python) file without any codes and one time setup.
+
+Arguments : $FileName$ -o $FileNameWithoutExtension$.py
+
+Working Directory : $FileDir$
+
+I am not totally mentioning the full procedure here as **I have attched the youtube link for the referece** so that you can have the full clarity while he explains the step-by-step process for it .
+
+now type use the ommand  ```pyuic5.exe .\mainGUI.ui -o .\mainGUI.py```  or ```pyuic5 .\mainGUI.ui -o .\mainGUI.py```in terminal of pycharm.
+
+
 
 ## You can see the output , test it and make changes according to the requirement.
