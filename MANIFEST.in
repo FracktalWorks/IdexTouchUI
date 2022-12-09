@@ -1,0 +1,6 @@
+include README.md
+recursive-include octoprint_Volterra400Dual2022TouchUI/templates *
+recursive-include octoprint_Volterra400Dual2022TouchUI/config *
+recursive-include octoprint_Volterra400Dual2022TouchUI/gcode *
+include versioneer.py
+include octoprint_Volterra400Dual2022TouchUI/_version.py
