@@ -195,15 +195,15 @@ ______________________________________
 
 1) Setup External tools in pycharm.
 
-Click on the ```File > settings``` option on the top left and click on the ```tools > external tools``` click on ```Create tool / Add icon +``` 
+- Click on the ```File > settings``` option on the top left and click on the ```tools > external tools``` click on ```Create tool / Add icon +``` 
 
-3) Convert .ui file from pyqt5 to .py (python) file without any codes and one time setup.
+2) Convert .ui file from pyqt5 to .py (python) file without any codes and one time setup.
 
-Arguments : $FileName$ -o $FileNameWithoutExtension$.py
+Arguments : ```$FileName$ -o $FileNameWithoutExtension$.py```
 
-Working Directory : $FileDir$
+Working Directory : ```$FileDir$```
 
-I am not totally mentioning the full procedure here as **I have attched the youtube link for the referece** so that you can have the full clarity while he explains the step-by-step process for it .
+- I am not totally mentioning the full procedure here as **I have attched the youtube link for the referece** so that you can have the full clarity while he explains the step-by-step process for it .
 
 now type use the ommand  ```pyuic5.exe .\mainGUI.ui -o .\mainGUI.py```  or ```pyuic5 .\mainGUI.ui -o .\mainGUI.py```in terminal of pycharm.
 
