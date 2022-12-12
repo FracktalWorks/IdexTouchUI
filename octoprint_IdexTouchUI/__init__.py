@@ -61,7 +61,7 @@ class IdexTouchUI(octoprint.plugin.StartupPlugin):
         )
 
 
-__plugin_name__ = "Idex Touch UI"
+__plugin_name__ = "IdexTouchUI"
 __plugin_version__ = __version__
 __plugin_pythoncompat__ = ">=3,<4"
 
