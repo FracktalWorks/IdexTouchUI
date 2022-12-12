@@ -5,7 +5,7 @@
  *
  * Fracktal Works
  * __________________
- * Authors: Vijay Varada
+ * Authors: sivasanthosh
  * Created: Nov 2016
  *
  * Licence: AGPLv3

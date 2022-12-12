@@ -23,7 +23,7 @@ plugin_version = versioneer.get_version()   # replaced by versioneer
 plugin_description = """TouchScreen Plugin for Idex Twin Dragon 2022"""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Vijay Raghav Varada"
+plugin_author = "Vsiva santhosh"
 
 # The plugin's author's mail address.
 plugin_author_email = "vjvarada@fracktal.in"
