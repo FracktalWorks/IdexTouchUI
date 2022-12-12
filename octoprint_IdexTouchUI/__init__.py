@@ -52,7 +52,7 @@ class IdexTouchUI(octoprint.plugin.StartupPlugin):
                 # version check: github repository
                 type="github_release",
                 user="FracktalWorks",
-                repo="Octoprint-IdexTouchUI",
+                repo="IdexTouchUI",
                 current=self._plugin_version,
 
                 # update method: pip
