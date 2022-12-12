@@ -363,7 +363,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
 
     def proceed(self):
         '''
-        Startes websocket, as well as initialises button actions and callbacks. THis is done in such a manner so that the callbacks that dnepend on websockets
+        Startes websocket, as well as initialises button actions and callbacks. THis is done in such a manner so that the callbacks that depend on websockets
         load only after the socket is available which in turn is dependent on the server being available which is checked in the sanity check thread
         '''
         self.QtSocket = QtWebsocket()
