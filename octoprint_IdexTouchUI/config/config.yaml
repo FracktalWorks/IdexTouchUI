@@ -10,7 +10,7 @@ api:
   allowCrossOrigin: true
   key: B508534ED20348F090B4D0AD637D3660
 appearance:
-  name: Volterra 400 Dual
+  name: Idex
 plugins:
   Julia2018FilamentSensor:
     _config_version: 2
@@ -29,7 +29,7 @@ plugins:
     delay_on: '500'
     strobe: '0'
     tower_enabled: '1'
-  VolterraServices:
+  IdexServices:
     _config_version: 2
     contact_door_sensor: '0'
     contact_extruder0: '0'
@@ -112,8 +112,8 @@ printerProfiles:
       sharedNozzle: false
     heatedBed: true
     id: _default
-    model: Fracktal Works Volterra Series
-    name: Volterra 400 Dual
+    model: Fracktal Works Idex 
+    name: Idex
     volume:
       custom_box: false
       depth: 400.0
