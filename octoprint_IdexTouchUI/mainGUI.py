@@ -650,49 +650,42 @@ class Ui_MainWindow(object):
 "background-color: rgba(255, 255, 255, 0);")
         self.tool0TargetTemperature_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.tool0TargetTemperature_3.setObjectName("tool0TargetTemperature_3")
-        self.doorLockButton = QtWidgets.QToolButton(self.homePage)
-        self.doorLockButton.setEnabled(False)
-        self.doorLockButton.setGeometry(QtCore.QRect(390, 111, 90, 100))
-        self.doorLockButton.setMinimumSize(QtCore.QSize(0, 0))
+        # self.doorLockButton = QtWidgets.QToolButton(self.homePage)
+        # self.doorLockButton.setEnabled(False)
+        # self.doorLockButton.setGeometry(QtCore.QRect(390, 111, 90, 100))
+        # self.doorLockButton.setMinimumSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
         font.setFamily("Gotham")
         font.setPointSize(7)
-        self.doorLockButton.setFont(font)
-        self.doorLockButton.setStyleSheet("QToolButton {\n"
-"    padding-top: 20px;\n"
-"     border: 1px solid rgb(87, 87, 87);\n"
-"    background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));\n"
-"\n"
-"border-top-left-radius: 10px;\n"
-"\n"
-"border-bottom-left-radius: 10px;\n"
-"\n"
-"\n"
-"\n"
-"}\n"
-"\n"
-"QToolButton:pressed {\n"
-"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
-"}\n"
-"\n"
-"QToolButton:flat {\n"
-"    border: none; /* no border for a flat push button */\n"
-"}\n"
-"\n"
-"QToolButton:default {\n"
-"    border-color: navy; /* make the default button prominent */\n"
-"}")
+
+# "    padding-top: 20px;\n"
+# "     border: 1px solid rgb(87, 87, 87);\n"
+# "    background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));\n"
+# "\n"
+# "border-top-left-radius: 10px;\n"
+# "\n"
+# "border-bottom-left-radius: 10px;\n"
+# "\n"
+# "\n"
+# "\n"
+# "}\n"
+# "\n"
+# "QToolButton:pressed {\n"
+# "    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+# "                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
+# "}\n"
+# "\n"
+# "QToolButton:flat {\n"
+# "    border: none; /* no border for a flat push button */\n"
+# "}\n"
+# "\n"
+# "QToolButton:default {\n"
+# "    border-color: navy; /* make the default button prominent */\n"
+# "}")
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("templates/img/doorUnlock.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon4.addPixmap(QtGui.QPixmap("templates/img/doorLock.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.doorLockButton.setIcon(icon4)
-        self.doorLockButton.setIconSize(QtCore.QSize(50, 50))
-        self.doorLockButton.setCheckable(False)
-        self.doorLockButton.setChecked(False)
-        self.doorLockButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
-        self.doorLockButton.setAutoRaise(False)
-        self.doorLockButton.setObjectName("doorLockButton")
+        
         self.line_8 = QtWidgets.QFrame(self.homePage)
         self.line_8.setGeometry(QtCore.QRect(28, 350, 416, 20))
         self.line_8.setFrameShape(QtWidgets.QFrame.HLine)
@@ -751,7 +744,7 @@ class Ui_MainWindow(object):
         self.celciusLabel_3.raise_()
         self.tool0TargetTemperature_2.raise_()
         self.tool0TargetTemperature_3.raise_()
-        self.doorLockButton.raise_()
+        
         self.line_8.raise_()
         self.line_9.raise_()
         self.ipStatus.raise_()
@@ -7966,7 +7959,7 @@ class Ui_MainWindow(object):
         self.celciusLabel_3.setText(_translate("MainWindow", "°C"))
         self.tool0TargetTemperature_2.setText(_translate("MainWindow", "0"))
         self.tool0TargetTemperature_3.setText(_translate("MainWindow", "1"))
-        self.doorLockButton.setText(_translate("MainWindow", "Toggle Door"))
+       
         self.ipStatus.setText(_translate("MainWindow", "Not Connected"))
         self.menuControlButton.setText(_translate("MainWindow", "Control"))
         self.menuPrintButton.setText(_translate("MainWindow", "Print"))
