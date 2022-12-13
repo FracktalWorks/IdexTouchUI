@@ -13,7 +13,7 @@ plugin_package = "octoprint_IdexTouchUI"
 
 # The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
-plugin_name = "Octoprint-IdexTouchUI"
+plugin_name = "IdexTouchUI"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
 plugin_version = versioneer.get_version()   # replaced by versioneer
@@ -23,7 +23,7 @@ plugin_version = versioneer.get_version()   # replaced by versioneer
 plugin_description = """TouchScreen Plugin for Idex Twin Dragon 2022"""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Vsiva santhosh"
+plugin_author = "siva santhosh"
 
 # The plugin's author's mail address.
 plugin_author_email = "vjvarada@fracktal.in"
