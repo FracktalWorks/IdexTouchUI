@@ -207,6 +207,34 @@ Working Directory : ```$FileDir$```
 
 now type use the ommand  ```pyuic5.exe .\mainGUI.ui -o .\mainGUI.py```  or ```pyuic5 .\mainGUI.ui -o .\mainGUI.py```in terminal of pycharm.
 
+## Making changes in the main.py 
 
+This is the main python file that acts a backend for the touch UI as it process the parameters and elements of the mainGUI and process them
+* Remove/ replace/ add the required widgets , elements that are added in the GUI/.ui file which is being converted into the .py file so that there won't be any errors while execution 
+
+## Making & configuring the octoprint plugin for the Idex twin dragon :
+
+* Check this documentation for geting started wth octoprint plugins & configuring the setup.py , _init_.py and the basic setup of the plugin : https://docs.octoprint.org/en/master/plugins/gettingstarted.html
+
+* Check this documentaion for the development of the plugins in octoprint : https://docs.octoprint.org/en/master/plugins/index.html 
+
+* Check with ```setup.py```, ```versioneer.py```, ```_init_.py```, ```MANIFESTATION.in``` , ```setup.cfg``` etc., other files what so ever are applicable for the project.
+
+# Making the Github Commit & uploading the files of the project repository
+
+* check the files without errors ,put a description of the changes and make the Git pull & make the commit to your changes in the main branch 
+
+* for the plugin make a new release of the plugin and put a description of the changes and set a release.
+
+# Trouble shooting
+
+## Make sure before You make the release of the plugin make the repository from private to public or else it won't install
+
+## How to degrade the pip version in octoprint server 
+
+https://community.octoprint.org/t/i-cannot-install-uninstall-update-plugins-update-octoprint-or-restore-a-backup-i-get-a-unicodeencodeerror-latin-1-codec-cant-encode-characters/42684
+
+
+Refer this documentation for the degradation of the pip version of the octoprint : https://gist.github.com/foosel/4d2d34d7689a07b6d506d9508fc115f4
 
 ## You can see the output , test it and make changes according to the requirement.
