@@ -2305,10 +2305,10 @@ class ThreadSanityCheck(QtCore.QThread):
                     result = [s.strip() for s in result]
                     for line in result:
                         if b'FTDI' in line:
-                            self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'ttyUSB') + 7].decode('utf-8')
+                            self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'tty3') + 7].decode('utf-8')
                             print(self.MKSPort)
                         if b'ch34' in line:
-                            self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'ttyUSB') + 7].decode('utf-8')
+                            self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'tty3') + 7].decode('utf-8')
                             print(self.MKSPort)
 
                     if not self.MKSPort:
