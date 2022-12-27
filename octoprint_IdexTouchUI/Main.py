@@ -113,7 +113,7 @@ filaments = OrderedDict(filaments)
 #                        'X4': 185, 'Y4': 42
 #                        }
 
-calibrationPosition = {'X1': 336, 'Y1': 33,
+calibrationPosition = {'X1': 213, 'Y1': 33,
                        'X2': 27, 'Y2': 33,
                        'X3': 183, 'Y3': 343,
                        'X4': 183, 'Y4': 33
@@ -545,8 +545,8 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.setFlowRateButton.pressed.connect(lambda: octopiclient.flowrate(self.flowRateSpinBox.value()))
         self.setFeedRateButton.pressed.connect(lambda: octopiclient.feedrate(self.feedRateSpinBox.value()))
 
-        self.moveZPBabyStep.pressed.connect(lambda: octopiclient.gcode(command='M290 Z0.025'))
-        self.moveZMBabyStep.pressed.connect(lambda: octopiclient.gcode(command='M290 Z-0.025'))
+        self.moveZPBabyStep.pressed.connect(lambda: octopiclient.gcode(command='SET_GCODE_OFFSET Z_ADJUST=0.025 MOVE=1')) #
+        self.moveZMBabyStep.pressed.connect(lambda: octopiclient.gcode(command='SET_GCODE_OFFSET Z_ADJUST=-0.025 MOVE=1')) #
 
         # ChangeFilament rutien
         self.changeFilamentButton.pressed.connect(self.changeFilament)
@@ -1860,15 +1860,15 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         :return:
         '''
         self.toolZOffsetCaliberationPageCount = 0
-        octopiclient.gcode(command='M104 S200')
-        octopiclient.gcode(command='M104 T1 S200')
+        octopiclient.gcode(command='M104 S0') # BEFORE S200
+        octopiclient.gcode(command='M104 T1 S0') # BEFORE M104 T1 S200
         octopiclient.gcode(command='M211 S0')  # Disable software endstop
         octopiclient.gcode(command='T0')  # Set active tool to t0
-        octopiclient.gcode(command='M503')  # makes sure internal value of Z offset and Tool offsets are stored before erasing
+        #octopiclient.gcode(command='M503')  # makes sure internal value of Z offset and Tool offsets are stored before erasing
         octopiclient.gcode(command='M420 S0')  # Dissable mesh bed leveling for good measure
         self.stackedWidget.setCurrentWidget(self.quickStep1Page)
         octopiclient.home(['x', 'y', 'z'])
-        octopiclient.jog(x=40, y=40, absolute=True, speed=2000)
+        octopiclient.jog(x=76, y=40, absolute=True, speed=2000)
 
     def quickStep2(self):
         '''
@@ -1933,7 +1933,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         octopiclient.gcode(command='M114')
         octopiclient.jog(z=4, absolute=True, speed=1500)
         octopiclient.gcode(command='T0')
-        octopiclient.gcode(command='M211 S1')  # Disable software endstop
+        #octopiclient.gcode(command='M211 S1')  # Disable software endstop
         self.stackedWidget.setCurrentWidget(self.calibratePage)
         octopiclient.home(['x', 'y', 'z'])
         octopiclient.gcode(command='M104 S0')
