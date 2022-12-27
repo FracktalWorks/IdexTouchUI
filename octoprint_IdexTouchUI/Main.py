@@ -113,10 +113,10 @@ filaments = OrderedDict(filaments)
 #                        'X4': 185, 'Y4': 42
 #                        }
 
-calibrationPosition = {'X1': 213, 'Y1': 33,
-                       'X2': 27, 'Y2': 33,
-                       'X3': 183, 'Y3': 343,
-                       'X4': 183, 'Y4': 33
+calibrationPosition = {'X1': 77, 'Y1': 33,
+                       'X2': 213, 'Y2': 33,
+                       'X3': 213, 'Y3': 180,
+                       'X4': 77, 'Y4': 180
                        }
 
 try:
