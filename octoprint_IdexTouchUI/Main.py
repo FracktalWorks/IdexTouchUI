@@ -18,8 +18,8 @@ import keyboard
 import dialog
 import styles
 import asset_bundle
-
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 import time
 import sys
 import subprocess
@@ -34,6 +34,8 @@ import json
 import random
 import uuid
 import os
+import threading
+import shutil
 # import serial
 import io
 import requests
@@ -45,6 +47,7 @@ if not Development:
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BCM)  # Use the board numbering scheme
     GPIO.setwarnings(False)  # Disable GPIO warnings H
+
 
 # TODO:
 '''
@@ -89,6 +92,12 @@ Testing:
 ip = '0.0.0.0:5000'
 apiKey = 'B508534ED20348F090B4D0AD637D3660'
 
+# URL of the configuration file in the GitHub repository
+api_url = 'https://github.com/FracktalWorks/Klipper_CFG/raw/main/Twin%20Dragon_IDEX.cfg'
+
+# Local path of the configuration file to be updated
+local_path = '/home/pi/printer.cfg'
+
 file_name = ''
 filaments = [
                 ("PLA", 200),
@@ -124,7 +133,7 @@ try:
 except AttributeError:
     def _fromUtf8(s):
         return s
-
+    
 
 def run_async(func):
     '''
@@ -187,6 +196,36 @@ def getHostname():
         return hostname.decode("utf-8")  + ".local"
     except:
         return "Error"
+    
+def check_for_updates(self):
+    try:
+        url = "https://github.com/FracktalWorks/Klipper_CFG/raw/main/Twin%20Dragon_IDEX.cfg"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            new_config = response.content.decode("utf-8")
+            current_config = open('/home/pi/printer.cfg').read()
+
+            if new_config != current_config:
+                update_config(new_config)
+        else:
+            print("Error: Failed to retrieve updated configuration from GitHub")
+    except:
+        return "Error"
+
+
+    
+def update_config(new_config):
+    with open('/home/pi/printer.cfg', 'w') as f:
+        f.write(new_config)
+    print("Updated printer.cfg with new configuration")
+
+# Check for updates and update the config file every 15 days
+def auto_update():
+    check_for_updates()
+    threading.Timer(15 * 24 * 60 * 60, auto_update).start()
+
+auto_update
 
 class BuzzerFeedback(object):
     def __init__(self, buzzerPin):
@@ -283,23 +322,61 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.wifiPasswordLineEdit.setObjectName(_fromUtf8("wifiPasswordLineEdit"))
 
         font.setPointSize(11)
-        self.ethStaticIpLineEdit = ClickableLineEdit(self.ethStaticSettings)
-        self.ethStaticIpLineEdit.setGeometry(QtCore.QRect(120, 10, 300, 30))
-        self.ethStaticIpLineEdit.setFont(font)
-        self.ethStaticIpLineEdit.setStyleSheet(styles.textedit)
-        self.ethStaticIpLineEdit.setObjectName(_fromUtf8("ethStaticIpLineEdit"))
+        self.staticIpLineEdit = ClickableLineEdit(self.ethStaticSettings)
+        self.staticIpLineEdit.setGeometry(QtCore.QRect(120, 10, 300, 30))
+        self.staticIpLineEdit.setFont(font)
+        self.staticIpLineEdit.setStyleSheet(styles.textedit)
+        self.staticIpLineEdit.setObjectName(_fromUtf8("staticIpLineEdit")) ##############needed to chechk staticIPIpLineEdit
 
-        self.ethStaticGatewayLineEdit = ClickableLineEdit(self.ethStaticSettings)
-        self.ethStaticGatewayLineEdit.setGeometry(QtCore.QRect(120, 60, 300, 30))
-        self.ethStaticGatewayLineEdit.setFont(font)
-        self.ethStaticGatewayLineEdit.setStyleSheet(styles.textedit)
-        self.ethStaticGatewayLineEdit.setObjectName(_fromUtf8("ethStaticGatewayLineEdit"))
+        self.staticIpGatewayLineEdit = ClickableLineEdit(self.staticIpSettings)
+        self.staticIpGatewayLineEdit.setGeometry(QtCore.QRect(120, 60, 300, 30))
+        self.staticIpGatewayLineEdit.setFont(font)
+        self.staticIpGatewayLineEdit.setStyleSheet(styles.textedit)
+        self.staticIpGatewayLineEdit.setObjectName(_fromUtf8("staticIpGatewayLineEdit"))
+
+        self.staticIPNameServerLineEdit = ClickableLineEdit(self.ethStaticSettings)
+        self.staticIPNameServerLineEdit.setGeometry(QtCore.QRect(120, 110, 300, 30))
+        self.staticIPNameServerLineEdit.setFont(font)
+        self.staticIPNameServerLineEdit.setStyleSheet(styles.textedit)
+        self.staticIPNameServerLineEdit.setObjectName(_fromUtf8("staticIPNameServerLineEdit"))
 
         self.menuCartButton.setDisabled(True)
 
         self.movie = QtGui.QMovie("templates/img/loading.gif")
         self.loadingGif.setMovie(self.movie)
         self.movie.start()
+
+
+    # def update_file(self):
+    #     # Get the latest release information from the GitHub API
+    #     response = requests.get(url)
+
+    #     if response.status_code == 200:
+    #         # Parse the latest release information
+    #         release_info = response.json()
+
+    #         asset_url = release_info['assets'][0]['browser_download_url']
+
+    #         # Download the latest release asset to the local path
+    #         response = requests.get(asset_url)
+
+    #         if response.status_code == 200:
+    #             with open(local_path, 'wb') as f:
+    #                 f.write(response.content)
+              
+    #         else:
+    #             print(f'Failed to download asset from {url}')
+    #     else:
+    #         print(f'Failed to retrieve latest release information for {url}')
+
+
+    # def check_update(self):
+    #     # Check if it's time to update the local file
+    #     current_time = time.time()
+
+    #     if self.update_button.isDown() or current_time - last_update_time >= update_interval:
+    #         self.update_file()
+    #     threading.Thread(target=update_loop, daemon=True).start()
 
     def __init__(self):
         '''
@@ -361,6 +438,31 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         except Exception as e:
             self._logger.error(e)
 
+    def check_for_updates(self):
+        url = "https://github.com/FracktalWorks/Klipper_CFG/raw/main/Twin%20Dragon_IDEX.cfg"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            new_config = response.content.decode("utf-8")
+            current_config = open('/home/pi/printer.cfg').read()
+
+            if new_config != current_config:
+                update_config(new_config)
+        else:
+            print("Error: Failed to retrieve updated configuration from GitHub")
+
+    def update_config(new_config):
+        with open('/home/pi/printer.cfg', 'w') as f:
+            f.write(new_config)
+        print("Updated printer.cfg with new configuration")
+
+    # Check for updates and update the config file every 15 days
+    def auto_update():
+        check_for_updates()
+        threading.Timer(15 * 24 * 60 * 60, auto_update).start()
+
+    auto_update
+
     def proceed(self):
         '''
         Startes websocket, as well as initialises button actions and callbacks. THis is done in such a manner so that the callbacks that depend on websockets
@@ -406,8 +508,9 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
 
         # Text Input events
         self.wifiPasswordLineEdit.clicked_signal.connect(lambda: self.startKeyboard(self.wifiPasswordLineEdit.setText))
-        self.ethStaticIpLineEdit.clicked_signal.connect(lambda: self.ethShowKeyboard(self.ethStaticIpLineEdit))
-        self.ethStaticGatewayLineEdit.clicked_signal.connect(lambda: self.ethShowKeyboard(self.ethStaticGatewayLineEdit))
+        self.staticIPLineEdit.clicked_signal.connect(lambda: self.staticIPShowKeyboard(self.staticIPLineEdit))
+        self.staticIPGatewayLineEdit.clicked_signal.connect(lambda: self.staticIPShowKeyboard(self.staticIPGatewayLineEdit))
+        self.staticIPNameServerLineEdit.clicked_signal.connect(lambda: self.staticIPShowKeyboard(self.staticIPNameServerLineEdit))
 
         # Button Events:
 
@@ -442,8 +545,8 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.quickStep1NextButton.clicked.connect(self.quickStep2)
         self.quickStep2NextButton.clicked.connect(self.quickStep3)
         self.quickStep3NextButton.clicked.connect(self.quickStep4)
-        self.quickStep4NextButton.clicked.connect(self.nozzleHeightStep1)
-        self.nozzleHeightStep1NextButton.clicked.connect(self.nozzleHeightStep1)
+        self.quickStep4NextButton.clicked.connect(self.doneStep)
+        self.nozzleHeightStep1NextButton.clicked.connect(self.cancelStep)
         self.quickStep1CancelButton.pressed.connect(self.cancelStep)
         self.quickStep2CancelButton.pressed.connect(self.cancelStep)
         self.quickStep3CancelButton.pressed.connect(self.cancelStep)
@@ -590,14 +693,13 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
             lambda: self.stackedWidget.setCurrentWidget(self.networkSettingsPage))
         self.wifiSettingsDoneButton.pressed.connect(self.acceptWifiSettings)
 
-        # Ethernet setings page
-        self.ethStaticCheckBox.stateChanged.connect(self.ethStaticChanged)
-        # self.ethStaticCheckBox.stateChanged.connect(lambda: self.ethStaticSettings.setVisible(self.ethStaticCheckBox.isChecked()))
-        self.ethStaticIpKeyboardButton.pressed.connect(lambda: self.ethShowKeyboard(self.ethStaticIpLineEdit))
-        self.ethStaticGatewayKeyboardButton.pressed.connect(lambda: self.ethShowKeyboard(self.ethStaticGatewayLineEdit))
-        self.ethSettingsDoneButton.pressed.connect(self.ethSaveStaticNetworkInfo)
-        self.ethSettingsCancelButton.pressed.connect(
-            lambda: self.stackedWidget.setCurrentWidget(self.networkSettingsPage))
+        # Static IP setings page
+        self.staticIPKeyboardButton.pressed.connect(lambda: self.staticIPShowKeyboard(self.staticIPLineEdit))
+        self.staticIPGatewayKeyboardButton.pressed.connect(lambda: self.staticIPShowKeyboard(self.staticIPGatewayLineEdit))
+        self.staticIPNameServerKeyboardButton.pressed.connect(lambda: self.staticIPShowKeyboard(self.staticIPNameServerLineEdit))
+        self.staticIPSettingsDoneButton.pressed.connect(self.staticIPSaveStaticNetworkInfo)
+        self.staticIPSettingsCancelButton.pressed.connect(lambda: self.stackedWidget.setCurrentWidget(self.networkSettingsPage))
+        self.deleteStaticIPSettingsButton.pressed.connect(self.deleteStaticIPSettings)
 
         # Display settings
         self.rotateDisplay.pressed.connect(self.showRotateDisplaySettingsPage)
@@ -783,7 +885,31 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
                     return
 
     ''' +++++++++++++++++++++++++++ IDEX VAS +++++++++++++++++++++++++++++++++++++ '''
+    # '''+++++++++++++++++++++++++++++++++++Github automatic upadate for klipper config file++++++++++++++++++++++++++++++++++++++++++++'''
+    # # URL of the configuration file in the GitHub repository
+    # url = 'https://github.com/FracktalWorks/Klipper_CFG/raw/main/Twin%20Dragon_IDEX.cfg'
 
+    # # Local path of the configuration file to be updated
+    # local_path = '/home/pi/printer.cfg'
+
+    # # Download the latest version of the configuration file from GitHub
+    # response = requests.get(url)
+
+    # if response.status_code == 200:
+    #     # Parse the latest release information
+    #     release_info = response.json()
+
+    #     # Download the latest release asset to the local path
+    #     response = requests.get(url)
+    #     with open('/home/pi/printer.cfg', 'wb') as f:
+    #         f.write(response.content)
+
+    #         # Replace the old configuration file with the new one
+    #     os.replace('/tmp/printer.cfg', local_path)
+
+    #     # Check if it's time to update the local file
+
+    # '''-----------------------------------------------------------------------------------------------------------------'''
     ''' +++++++++++++++++++++++++++ Firmware Update+++++++++++++++++++++++++++++++++++ '''
 
     isFirmwareUpdateInProgress = False
@@ -1057,50 +1183,13 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
             time.sleep(60)
 
 
-    ''' +++++++++++++++++++++++++++++++++Ethernet Settings+++++++++++++++++++++++++++++ '''
+    ''' +++++++++++++++++++++++++++++++++Static IP Settings+++++++++++++++++++++++++++++ '''
 
-    def ethSettings(self):
-        self.stackedWidget.setCurrentWidget(self.ethSettingsPage)
-        # self.ethStaticCheckBox.setChecked(True)
-        self.ethNetworkInfo()
-
-    def ethStaticChanged(self, state):
-        self.ethStaticSettings.setVisible(self.ethStaticCheckBox.isChecked())
-        self.ethStaticSettings.setEnabled(self.ethStaticCheckBox.isChecked())
-        # if state == QtCore.Qt.Checked:
-        #     self.ethStaticSettings.setVisible(True)
-        # else:
-        #     self.ethStaticSettings.setVisible(False)
-
-    def ethNetworkInfo(self):
-        txt = subprocess.Popen("cat /etc/dhcpcd.conf", stdout=subprocess.PIPE, shell=True).communicate()[0]
-
-        reEthGlobal = b"interface\s+eth0\s?(static\s+[a-z0-9./_=\s]+\n)*"
-        reEthAddress = b"static\s+ip_address=([\d.]+)(/[\d]{1,2})?"
-        reEthGateway = b"static\s+routers=([\d.]+)(/[\d]{1,2})?"
-
-        mtEthGlobal = re.search(reEthGlobal, txt)
-
-        cbStaticEnabled = False
-        txtEthAddress = ""
-        txtEthGateway = ""
-
-        if mtEthGlobal:
-            sz = len(mtEthGlobal.groups())
-            cbStaticEnabled = (sz == 1)
-
-            if sz == 1:
-                mtEthAddress = re.search(reEthAddress, mtEthGlobal.group(0))
-                if mtEthAddress and len(mtEthAddress.groups()) == 2:
-                    txtEthAddress = mtEthAddress.group(1)
-                mtEthGateway = re.search(reEthGateway, mtEthGlobal.group(0))
-                if mtEthGateway and len(mtEthGateway.groups()) == 2:
-                    txtEthGateway = mtEthGateway.group(1)
-
-        self.ethStaticCheckBox.setChecked(cbStaticEnabled)
-        self.ethStaticSettings.setVisible(cbStaticEnabled)
-        self.ethStaticIpLineEdit.setText(txtEthAddress)
-        self.ethStaticGatewayLineEdit.setText(txtEthGateway)
+    def staticIPSettings(self):
+        self.stackedWidget.setCurrentWidget(self.staticIPSettingsPage)
+        #add "eth0" and "wlan0" to staticIPComboBox:
+        self.staticIPComboBox.clear()
+        self.staticIPComboBox.addItems(["eth0", "wlan0"])
 
     def isIpErr(self, ip):
         return (re.search(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$", ip) is None)
@@ -1108,59 +1197,76 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
     def showIpErr(self, var):
         return dialog.WarningOk(self, "Invalid input: {0}".format(var))
 
-    def ethSaveStaticNetworkInfo(self):
-        cbStaticEnabled = self.ethStaticCheckBox.isChecked()
-        txtEthAddress = str(self.ethStaticIpLineEdit.text())
-        txtEthGateway = str(self.ethStaticGatewayLineEdit.text())
+    def staticIPSaveStaticNetworkInfo(self):
+        txtStaticIPInterface = self.staticIPComboBox.currentText()
+        txtStaticIPAddress = str(self.staticIPLineEdit.text())
+        txtStaticIPGateway = str(self.staticIPGatewayLineEdit.text())
+        txtStaticIPNameServer = str(self.staticIPNameServerLineEdit.text())
 
-        if cbStaticEnabled:
-            if self.isIpErr(txtEthAddress):
-                return self.showIpErr("IP Address")
-            if self.isIpErr(txtEthGateway):
-                return self.showIpErr("Gateway")
+        if self.isIpErr(txtStaticIPAddress):
+            return self.showIpErr("IP Address")
+        if self.isIpErr(txtStaticIPGateway):
+            return self.showIpErr("Gateway")
+        if txtStaticIPNameServer is not "":
+            if self.isIpErr(txtStaticIPNameServer):
+                return self.showIpErr("NameServer")
+        Globaltxt = subprocess.Popen("cat /etc/dhcpcd.conf", stdout=subprocess.PIPE, shell=True).communicate()[0].decode('utf8')
+        staticIPConfig = ""
+        # using regex remove all lines staring with "interface" and "static" from txt
+        Globaltxt = re.sub(r"interface.*\n", "", Globaltxt)
+        Globaltxt = re.sub(r"static.*\n", "", Globaltxt)
+        Globaltxt = re.sub(r"^\s+", "", Globaltxt)
 
-        txt = subprocess.Popen("cat /etc/dhcpcd.conf", stdout=subprocess.PIPE, shell=True).communicate()[0]
-        op = ""
 
-        reEthGlobal = r"interface\s+eth0"
-        mtEthGlobal = re.search(reEthGlobal, txt)
+        staticIPConfig = "\ninterface {0}\nstatic ip_address={1}/24\nstatic routers={2}\nstatic domain_name_servers=8.8.8.8 8.8.4.4 {3}\n\n".format(txtStaticIPInterface, txtStaticIPAddress, txtStaticIPGateway, txtStaticIPNameServer)
+        Globaltxt = staticIPConfig + Globaltxt
+        with open("/etc/dhcpcd.conf", "w") as f:
+            f.write(Globaltxt)
 
-        if cbStaticEnabled:
-            if not mtEthGlobal:
-                txt = txt + "\n" + "interface eth0" + "\n"
-            op = "interface eth0\nstatic ip_address={0}/24\nstatic routers={1}\nstatic domain_name_servers=8.8.8.8 8.8.4.4\n\n".format(
-                txtEthAddress, txtEthGateway)
 
-        res = re.sub(r"interface\s+eth0\s?(static\s+[a-z0-9./_=\s]+\n)*", op, txt)
-        try:
-            file = open("/etc/dhcpcd.conf", "w")
-            file.write(res)
-            file.close()
-        except:
-            if dialog.WarningOk(self, "Failed to change Ethernet Interface configuration."):
-                pass
+        if txtStaticIPInterface == 'eth0':
+            print("Restarting networking for eth0")
+            self.restartStaticIPThreadObject = ThreadRestartNetworking(ThreadRestartNetworking.ETH)
+            self.restartStaticIPThreadObject.signal.connect(self.staticIPReconnectResult)
+            self.restartStaticIPThreadObject.start()
+            # self.connect(self.restartStaticIPThreadObject, QtCore.SIGNAL(signal), self.staticIPReconnectResult)
+            self.staticIPMessageBox = dialog.dialog(self,
+                                               "Restarting networking, please wait...",
+                                               icon="exclamation-mark.png",
+                                               buttons=QtWidgets.QMessageBox.Cancel)
+            if self.staticIPMessageBox.exec_() in {QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Cancel}:
+                self.stackedWidget.setCurrentWidget(self.networkSettingsPage)
+        elif txtStaticIPInterface == 'wlan0':
+            print("Restarting networking for wlan0")
+            self.restartWifiThreadObject = ThreadRestartNetworking(ThreadRestartNetworking.WLAN)
+            self.restartWifiThreadObject.signal.connect(self.wifiReconnectResult)
+            self.restartWifiThreadObject.start()
+            self.wifiMessageBox = dialog.dialog(self,
+                                                "Restarting networking, please wait...",
+                                                icon="exclamation-mark.png",
+                                                buttons=QtWidgets.QMessageBox.Cancel)
+            if self.wifiMessageBox.exec_() in {QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Cancel}:
+                self.stackedWidget.setCurrentWidget(self.networkSettingsPage)
+    def deleteStaticIPSettings(self):
+        Globaltxt = subprocess.Popen("cat /etc/dhcpcd.conf", stdout=subprocess.PIPE, shell=True).communicate()[0].decode('utf8')
+        # using regex remove all lines staring with "interface" and "static" from txt
+        Globaltxt = re.sub(r"interface.*\n", "", Globaltxt)
+        Globaltxt = re.sub(r"static.*\n", "", Globaltxt)
+        Globaltxt = re.sub(r"^\s+", "", Globaltxt)
+        with open("/etc/dhcpcd.conf", "w") as f:
+            f.write(Globaltxt)
+        self.stackedWidget.setCurrentWidget(self.networkSettingsPage)
 
-        # signal = 'ETH_RECONNECT_RESULT'
-        # self.restartEthThreadObject = ThreadRestartNetworking(ThreadRestartNetworking.ETH, signal)
-        self.restartEthThreadObject = ThreadRestartNetworking(ThreadRestartNetworking.ETH)
-        self.restartEthThreadObject.signal.connect(self.ethReconnectResult)
-        self.restartEthThreadObject.start()
-        # self.connect(self.restartEthThreadObject, QtCore.SIGNAL(signal), self.ethReconnectResult)
-        self.ethMessageBox = dialog.dialog(self,
-                                           "Restarting networking, please wait...",
-                                           icon="exclamation-mark.png",
-                                           buttons=QtWidgets.QMessageBox.Cancel)
-        if self.ethMessageBox.exec_() in {QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Cancel}:
-            self.stackedWidget.setCurrentWidget(self.networkSettingsPage)
-
-    def ethReconnectResult(self, x):
-        self.ethMessageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    def staticIPReconnectResult(self, x):
+        self.staticIPMessageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
         if x is not None:
-            self.ethMessageBox.setLocalIcon('success.png')
-            self.ethMessageBox.setText('Connected, IP: ' + x)
+            self.staticIPMessageBox.setLocalIcon('success.png')
+            self.staticIPMessageBox.setText('Connected, IP: ' + x)
+            self.staticIPMessageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            self.setIPStatus.setText(x)
         else:
 
-            self.ethMessageBox.setText("Not able to connect to Ethernet")
+            self.staticIPMessageBox.setText("Not able to set Static IP")
 
     def ethShowKeyboard(self, textbox):
         self.startKeyboard(textbox.setText, onlyNumeric=True, noSpace=True, text=str(textbox.text()))
@@ -1302,7 +1408,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         if dialog.WarningYesNo(self, "Are you sure you want to stop the print?"):
             octopiclient.cancelPrint()
 
-    def playPauseAction(self):
+    def playPauseAction(self, temperature):
         '''
         Toggles Play/Pause of a print depending on the status of the print
         '''
@@ -1311,8 +1417,43 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
                 octopiclient.startPrint()
         elif self.printerStatusText == "Printing":
             octopiclient.pausePrint()
+            if temperature['tool0Actual'] <= temperature['tool0Target']:
+                self.tool0TempBar.setMaximum(temperature['tool0Target'])
+                self.tool0TempBar.setStyleSheet(styles.bar_heater_heating)
+            else:
+                self.tool0TempBar.setMaximum(temperature['tool0Actual'])
+            self.tool0TempBar.setValue(temperature['tool0Actual'])
+            self.tool0ActualTemperature.setText(str(int(temperature['tool0Actual'])))  # + unichr(176)
+            self.tool0TargetTemperature.setText(str(int(temperature['tool0Target'])))
+
+            if temperature['tool1Actual'] <= temperature['tool0Target']:
+                self.tool1TempBar.setMaximum(temperature['tool0Target'])
+                self.tool1TempBar.setStyleSheet(styles.bar_heater_heating)    
+            else:
+                self.tool1TempBar.setMaximum(temperature['tool1Actual'])
+            self.tool1TempBar.setValue(temperature['tool1Actual'])
+            self.tool1ActualTemperature.setText(str(int(temperature['tool1Actual'])))  # + unichr(176)
+            self.tool1TargetTemperature.setText(str(int(temperature['tool1Target'])))
+
         elif self.printerStatusText == "Paused":
             octopiclient.pausePrint()
+            if temperature['tool0Actual'] <= temperature['tool0Target']:
+                self.tool0TempBar.setMaximum(temperature['tool0Target'])
+                self.tool0TempBar.setStyleSheet(styles.bar_heater_heating)
+            else:
+                self.tool0TempBar.setMaximum(temperature['tool0Actual'])
+            self.tool0TempBar.setValue(temperature['tool0Actual'])
+            self.tool0ActualTemperature.setText(str(int(temperature['tool0Actual'])))  # + unichr(176)
+            self.tool0TargetTemperature.setText(str(int(temperature['tool0Target'])))
+
+            if temperature['tool1Actual'] <= temperature['tool0Target']:
+                self.tool1TempBar.setMaximum(temperature['tool0Target'])
+                self.tool1TempBar.setStyleSheet(styles.bar_heater_heating)    
+            else:
+                self.tool1TempBar.setMaximum(temperature['tool1Actual'])
+            self.tool1TempBar.setValue(temperature['tool1Actual'])
+            self.tool1ActualTemperature.setText(str(int(temperature['tool1Actual'])))  # + unichr(176)
+            self.tool1TargetTemperature.setText(str(int(temperature['tool1Target'])))
 
     def fileListLocal(self):
         '''
@@ -1509,10 +1650,6 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.bedTargetTemperature.setText(str(int(temperature['bedTarget'])))  # + unichr(176))
 
 
-
-
-
-
         # updates the progress bar on the change filament screen
         if self.changeFilamentHeatingFlag:
             if self.activeExtruder == 0:
@@ -1545,6 +1682,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
                         octopiclient.extrude(5)     # extrudes some amount of filament to prevent plugging
 
                 self.changeFilamentProgress.setValue(temperature['tool1Actual'])
+
 
 
     def updatePrintStatus(self, file):
@@ -1860,14 +1998,16 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         :return:
         '''
         self.toolZOffsetCaliberationPageCount = 0
-        octopiclient.gcode(command='M104 S0') # BEFORE S200
-        octopiclient.gcode(command='M104 T1 S0') # BEFORE M104 T1 S200
+        octopiclient.gcode(command='M104 S200') # BEFORE S200
+        octopiclient.gcode(command='M104 T1 S200')
+        octopiclient.gcode(command='M104 T0 S200') # BEFORE M104 T1 S200
         octopiclient.gcode(command='M211 S0')  # Disable software endstop
         octopiclient.gcode(command='T0')  # Set active tool to t0
         #octopiclient.gcode(command='M503')  # makes sure internal value of Z offset and Tool offsets are stored before erasing
         octopiclient.gcode(command='M420 S0')  # Dissable mesh bed leveling for good measure
         self.stackedWidget.setCurrentWidget(self.quickStep1Page)
-        octopiclient.home(['x', 'y', 'z'])
+        # octopiclient.home(['x', 'y', 'z'])
+        octopiclient.gcode(command='G28')
         octopiclient.jog(x=76, y=40, absolute=True, speed=2000)
 
     def quickStep2(self):
@@ -1935,14 +2075,17 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         octopiclient.gcode(command='T0')
         #octopiclient.gcode(command='M211 S1')  # Disable software endstop
         self.stackedWidget.setCurrentWidget(self.calibratePage)
-        octopiclient.home(['x', 'y', 'z'])
+        # octopiclient.home(['x', 'y', 'z'])
+        octopiclient.gcode(command='G28')
         octopiclient.gcode(command='M104 S0')
+        octopiclient.gcode(command='M104 T0 S0')
         octopiclient.gcode(command='M104 T1 S0')
         octopiclient.gcode(command='M500')  # store eeprom settings to get Z home offset, mesh bed leveling back
 
     def cancelStep(self):
         self.stackedWidget.setCurrentWidget(self.calibratePage)
-        octopiclient.home(['x', 'y', 'z'])
+        # octopiclient.home(['x', 'y', 'z'])
+        octopiclient.gcode(command='G28')
         octopiclient.gcode(command='M104 S0')
         octopiclient.gcode(command='M104 T1 S0')
 
@@ -2328,6 +2471,7 @@ class ThreadRestartNetworking(QtCore.QThread):
         # subprocess.call(["ifdown", "--force", self.interface], shell=False)
         # subprocess.call(["ifup", "--force", self.interface], shell=False)
         time.sleep(5)
+
 
 
 if __name__ == '__main__':

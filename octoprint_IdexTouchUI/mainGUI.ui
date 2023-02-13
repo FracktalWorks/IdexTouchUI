@@ -173,7 +173,7 @@ QStatusBar::item {
 background-color: rgb(40, 40, 40);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>26</number>
     </property>
     <widget class="QWidget" name="loadingPage">
      <widget class="QLabel" name="LoadingLabel">
@@ -2891,7 +2891,7 @@ QCheckBox::indicator:unchecked {
      <zorder>hiddenCheckBox</zorder>
     </widget>
     <widget class="QWidget" name="ethSettingsPage">
-     <widget class="QPushButton" name="ethSettingsDoneButton">
+     <widget class="QPushButton" name="staticIPSettingsDoneButton">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -2991,55 +2991,6 @@ QPushButton:focus {
        </size>
       </property>
      </widget>
-     <widget class="QCheckBox" name="ethStaticCheckBox">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>161</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Gotham</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QCheckBox {
-	color: rgb(255, 255, 255);
-}
-
-QCheckBox::indicator {
-    width: 25px;
-    height: 25px;
-}
-
-QCheckBox::indicator:checked {
-    image: url(./templates/img/check-box.png);
-}
-QCheckBox::indicator:unchecked {
-    image: url(./templates/img/blank-check-box.png);
-}
-
-
-
-</string>
-      </property>
-      <property name="text">
-       <string>Static IP</string>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>40</width>
-        <height>40</height>
-       </size>
-      </property>
-      <property name="checked">
-       <bool>false</bool>
-      </property>
-     </widget>
      <widget class="QWidget" name="ethStaticSettings" native="true">
       <property name="enabled">
        <bool>true</bool>
@@ -3047,12 +2998,12 @@ QCheckBox::indicator:unchecked {
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>70</y>
+        <y>140</y>
         <width>481</width>
         <height>151</height>
        </rect>
       </property>
-      <widget class="QLabel" name="ethStaticIpLabel">
+      <widget class="QLabel" name="staticIPLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -3076,7 +3027,7 @@ QCheckBox::indicator:unchecked {
         <string>IP Address</string>
        </property>
       </widget>
-      <widget class="QLabel" name="ethStaticGatewayLabel">
+      <widget class="QLabel" name="staticIPGatewayLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -3100,7 +3051,7 @@ QCheckBox::indicator:unchecked {
         <string>Gateway</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="ethStaticGatewayKeyboardButton">
+      <widget class="QPushButton" name="staticIPGatewayKeyboardButton">
        <property name="geometry">
         <rect>
          <x>420</x>
@@ -3152,7 +3103,7 @@ QPushButton:focus {
         </size>
        </property>
       </widget>
-      <widget class="QPushButton" name="ethStaticIpKeyboardButton">
+      <widget class="QPushButton" name="staticIPKeyboardButton">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -3210,6 +3161,312 @@ QPushButton:focus {
         </size>
        </property>
       </widget>
+      <widget class="QLabel" name="staticIPNameServerLabel">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>110</y>
+         <width>110</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>MS Shell Dlg 2</family>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::NoContextMenu</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 255, 255);</string>
+       </property>
+       <property name="text">
+        <string>Name Servers</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="staticIPNameServerKeyboardButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>110</y>
+         <width>60</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>MS Shell Dlg 2</family>
+         <pointsize>18</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::NoContextMenu</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+     border: 1px solid rgb(0, 0, 0);
+	background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));
+
+
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}
+
+QPushButton:focus {
+	outline: none;
+}</string>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="staticIPINterfaceLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>110</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::NoContextMenu</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Interface</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="staticIPComboBox">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>20</y>
+        <width>291</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Gotham</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::NoContextMenu</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"> QScrollBar:vertical {
+     border: 1px solid black;
+border-radius: 5px;
+    background-color: rgb(40,40,40);
+     width: 60px;
+     margin: 67px 0 67px 0;
+ }
+
+/* Sets up the color and height of handle */
+QScrollBar::handle:vertical {
+border-radius: 5px;
+background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));
+min-height: 7px;
+}
+
+
+QScrollBar::add-line:vertical {
+     border: 1px solid black;
+background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));
+     height:65px;
+border-radius: 5px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+
+ QScrollBar::sub-line:vertical {
+     border: 1px solid black;
+background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));
+     height: 65px;
+border-radius: 5px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+
+QScrollBar::up-arrow:vertical {
+ image: url(./templates/img/arrows.png);
+    width: 40px;
+    height: 40px;
+ padding: 5px;
+ }
+QScrollBar::down-arrow:vertical {
+ image: url(./templates/img/arrows-5.png);
+    width: 40px;
+    height: 40px;
+ padding: 5px;
+ }
+
+/* need this to get rid of crosshatching on scrollbar background */
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+background: none;
+}
+
+QComboBox {
+border: 1px solid black;
+    padding: 0px 18px 0px 3px;
+    min-width: 6em;
+
+}
+
+QComboBox::item {
+	color: rgb(0, 0, 0);
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+background: white;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+background: white;
+}
+
+
+QComboBox::drop-down {
+border-left: 1px solid black;
+border-right: 1px solid black;
+	background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));
+    width: 60px;
+     height: 50px;
+
+}
+
+QComboBox::down-arrow {
+
+image: url(./templates/img/arrows-5.png);
+width: 30px;
+height: 30px;
+
+}
+
+
+QComboBox QAbstractItemView {
+    selection-background-color: rgb(40, 40, 40);
+    background: white;
+}</string>
+      </property>
+      <property name="editable">
+       <bool>false</bool>
+      </property>
+      <property name="maxVisibleItems">
+       <number>8</number>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="deleteStaticIPSettingsButton">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>20</y>
+        <width>81</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>18</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::NoContextMenu</enum>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+     border: 1px solid rgb(0, 0, 0);
+	background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0.188, stop:0 rgba(180, 180, 180, 255), stop:1 rgba(255, 255, 255, 255));
+
+
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}
+
+QPushButton:focus {
+	outline: none;
+}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../JuliaProSingle2022TouchUI/octoprint_JuliaProSingle2022TouchUI/templates/img/delete.png</normaloff>../../JuliaProSingle2022TouchUI/octoprint_JuliaProSingle2022TouchUI/templates/img/delete.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>40</width>
+        <height>40</height>
+       </size>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="networkSettingsPage">
@@ -3325,7 +3582,7 @@ QPushButton:focus {
        </size>
       </property>
      </widget>
-     <widget class="QPushButton" name="configureEthButton">
+     <widget class="QPushButton" name="configureStaticIPButton">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -3372,7 +3629,7 @@ QPushButton:focus {
 }</string>
       </property>
       <property name="text">
-       <string>Configure Ethernet</string>
+       <string>Configure Static IP</string>
       </property>
       <property name="iconSize">
        <size>
