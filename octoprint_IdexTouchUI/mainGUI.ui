@@ -173,7 +173,7 @@ QStatusBar::item {
 background-color: rgb(40, 40, 40);</string>
     </property>
     <property name="currentIndex">
-     <number>26</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="loadingPage">
      <widget class="QLabel" name="LoadingLabel">
@@ -2890,7 +2890,7 @@ QCheckBox::indicator:unchecked {
      <zorder>wifiSettingsDoneButton</zorder>
      <zorder>hiddenCheckBox</zorder>
     </widget>
-    <widget class="QWidget" name="ethSettingsPage">
+    <widget class="QWidget" name="staticIPSettingsPage">
      <widget class="QPushButton" name="staticIPSettingsDoneButton">
       <property name="geometry">
        <rect>
@@ -2941,7 +2941,7 @@ QPushButton:focus {
        </size>
       </property>
      </widget>
-     <widget class="QPushButton" name="ethSettingsCancelButton">
+     <widget class="QPushButton" name="staticIPSettingsCancelButton">
       <property name="geometry">
        <rect>
         <x>250</x>
