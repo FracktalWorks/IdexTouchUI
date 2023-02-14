@@ -326,9 +326,9 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.staticIpLineEdit.setGeometry(QtCore.QRect(120, 10, 300, 30))
         self.staticIpLineEdit.setFont(font)
         self.staticIpLineEdit.setStyleSheet(styles.textedit)
-        self.staticIpLineEdit.setObjectName(_fromUtf8("staticIpLineEdit")) ##############needed to chechk staticIPIpLineEdit
+        self.staticIpLineEdit.setObjectName(_fromUtf8("staticIPIpLineEdit")) ##############needed to chechk staticIPIpLineEdit
 
-        self.staticIpGatewayLineEdit = ClickableLineEdit(self.staticIpSettings)
+        self.staticIpGatewayLineEdit = ClickableLineEdit(self.ethStaticSettings)
         self.staticIpGatewayLineEdit.setGeometry(QtCore.QRect(120, 60, 300, 30))
         self.staticIpGatewayLineEdit.setFont(font)
         self.staticIpGatewayLineEdit.setStyleSheet(styles.textedit)
@@ -679,7 +679,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         # Network settings page
         self.networkInfoButton.pressed.connect(self.networkInfo)
         self.configureWifiButton.pressed.connect(self.wifiSettings)
-        self.configureEthButton.pressed.connect(self.ethSettings)
+        self.configureStaticIPButton.pressed.connect(self.staticIPSettings)
         self.networkSettingsBackButton.pressed.connect(lambda: self.stackedWidget.setCurrentWidget(self.settingsPage))
 
         # Network Info Page
@@ -1268,7 +1268,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
 
             self.staticIPMessageBox.setText("Not able to set Static IP")
 
-    def ethShowKeyboard(self, textbox):
+    def staticIPShowKeyboard(self, textbox):
         self.startKeyboard(textbox.setText, onlyNumeric=True, noSpace=True, text=str(textbox.text()))
     ''' ++++++++++++++++++++++++++++++++Display Settings+++++++++++++++++++++++++++++++ '''
 
