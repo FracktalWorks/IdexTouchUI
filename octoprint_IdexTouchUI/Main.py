@@ -322,17 +322,17 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.wifiPasswordLineEdit.setObjectName(_fromUtf8("wifiPasswordLineEdit"))
 
         font.setPointSize(11)
-        self.staticIpLineEdit = ClickableLineEdit(self.ethStaticSettings)
-        self.staticIpLineEdit.setGeometry(QtCore.QRect(120, 10, 300, 30))
-        self.staticIpLineEdit.setFont(font)
-        self.staticIpLineEdit.setStyleSheet(styles.textedit)
-        self.staticIpLineEdit.setObjectName(_fromUtf8("staticIPIpLineEdit")) ##############needed to chechk staticIPIpLineEdit
+        self.staticIPLineEdit = ClickableLineEdit(self.ethStaticSettings)
+        self.staticIPLineEdit.setGeometry(QtCore.QRect(120, 10, 300, 30))
+        self.staticIPLineEdit.setFont(font)
+        self.staticIPLineEdit.setStyleSheet(styles.textedit)
+        self.staticIPLineEdit.setObjectName(_fromUtf8("staticIPIpLineEdit")) ##############needed to chechk staticIPIpLineEdit
 
-        self.staticIpGatewayLineEdit = ClickableLineEdit(self.ethStaticSettings)
-        self.staticIpGatewayLineEdit.setGeometry(QtCore.QRect(120, 60, 300, 30))
-        self.staticIpGatewayLineEdit.setFont(font)
-        self.staticIpGatewayLineEdit.setStyleSheet(styles.textedit)
-        self.staticIpGatewayLineEdit.setObjectName(_fromUtf8("staticIpGatewayLineEdit"))
+        self.staticIPGatewayLineEdit = ClickableLineEdit(self.ethStaticSettings)
+        self.staticIPGatewayLineEdit.setGeometry(QtCore.QRect(120, 60, 300, 30))
+        self.staticIPGatewayLineEdit.setFont(font)
+        self.staticIPGatewayLineEdit.setStyleSheet(styles.textedit)
+        self.staticIPGatewayLineEdit.setObjectName(_fromUtf8("staticIPGatewayLineEdit"))
 
         self.staticIPNameServerLineEdit = ClickableLineEdit(self.ethStaticSettings)
         self.staticIPNameServerLineEdit.setGeometry(QtCore.QRect(120, 110, 300, 30))
@@ -701,9 +701,11 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         # Static IP setings page
         self.staticIPKeyboardButton.pressed.connect(lambda: self.staticIPShowKeyboard(self.staticIPLineEdit))
         self.staticIPGatewayKeyboardButton.pressed.connect(lambda: self.staticIPShowKeyboard(self.staticIPGatewayLineEdit))
-        self.staticIPNameServerKeyboardButton.pressed.connect(lambda: self.staticIPShowKeyboard(self.staticIPNameServerLineEdit))
+        self.staticIPNameServerKeyboardButton.pressed.connect(
+            lambda: self.staticIPShowKeyboard(self.staticIPNameServerLineEdit))
         self.staticIPSettingsDoneButton.pressed.connect(self.staticIPSaveStaticNetworkInfo)
-        self.staticIPSettingsCancelButton.pressed.connect(lambda: self.stackedWidget.setCurrentWidget(self.networkSettingsPage))
+        self.staticIPSettingsCancelButton.pressed.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.networkSettingsPage))
         self.deleteStaticIPSettingsButton.pressed.connect(self.deleteStaticIPSettings)
 
         # Display settings
