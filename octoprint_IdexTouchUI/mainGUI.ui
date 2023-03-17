@@ -173,7 +173,7 @@ QStatusBar::item {
 background-color: rgb(40, 40, 40);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>17</number>
     </property>
     <widget class="QWidget" name="loadingPage">
      <widget class="QLabel" name="LoadingLabel">
@@ -6720,16 +6720,16 @@ QDoubleSpinBox::down-button:pressed {
        <number>2</number>
       </property>
       <property name="minimum">
-       <double>30.000000000000000</double>
+       <double>-49.000000000000000</double>
       </property>
       <property name="maximum">
-       <double>42.000000000000000</double>
+       <double>50.000000000000000</double>
       </property>
       <property name="singleStep">
        <double>0.025000000000000</double>
       </property>
       <property name="value">
-       <double>36.049999999999997</double>
+       <double>5.000000000000000</double>
       </property>
      </widget>
      <widget class="QPushButton" name="toolOffsetXSetButton">
@@ -6931,10 +6931,10 @@ QDoubleSpinBox::down-button:pressed {
        <number>2</number>
       </property>
       <property name="minimum">
-       <double>-6.000000000000000</double>
+       <double>-50.000000000000000</double>
       </property>
       <property name="maximum">
-       <double>6.000000000000000</double>
+       <double>50.000000000000000</double>
       </property>
       <property name="singleStep">
        <double>0.025000000000000</double>
@@ -7124,16 +7124,16 @@ QDoubleSpinBox::down-button:pressed {
        <number>2</number>
       </property>
       <property name="minimum">
-       <double>-6.000000000000000</double>
+       <double>-10.000000000000000</double>
       </property>
       <property name="maximum">
-       <double>-1.000000000000000</double>
+       <double>10.000000000000000</double>
       </property>
       <property name="singleStep">
        <double>0.050000000000000</double>
       </property>
       <property name="value">
-       <double>-4.000000000000000</double>
+       <double>-10.000000000000000</double>
       </property>
      </widget>
      <widget class="QLabel" name="tollOffsetXLabel_2">
