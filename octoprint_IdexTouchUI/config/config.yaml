@@ -88,46 +88,15 @@ plugins:
     enabled: true
 printerProfiles:
   default: _default
-  defaultProfile:
-    axes:
-      e:
-        inverted: false
-        speed: 300
-      x:
-        inverted: false
-        speed: 6000
-      y:
-        inverted: false
-        speed: 6000
-      z:
-        inverted: false
-        speed: 200
-    color: default
-    extruder:
-      count: 2
-      nozzleDiameter: 0.6
-      offsets:
-      - - 0.0
-        - 0.0
-      sharedNozzle: false
-    heatedBed: true
-    id: _default
-    model: Fracktal Works Idex 
-    name: Idex
-    volume:
-      custom_box: false
-      depth: 400.0
-      formFactor: rectangular
-      height: 400.0
-      origin: lowerleft
-      width: 400.0
 serial:
-  baudrate: 115200
+  additionalPorts:
+  - /tmp/printer
+  baudrate: 250000
   blacklistedPorts:
   - /dev/ttyS*
   disconnectOnErrors: false
   ignoreErrorsFromFirmware: true
-  port: /dev/ttyUSB0
+  port: /tmp/printer
 server:
   commands:
     serverRestartCommand: sudo shutdown -r now

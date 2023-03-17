@@ -479,6 +479,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         else:
             self.stackedWidget.setCurrentWidget(self.homePage)
         self.isFilamentSensorInstalled()
+        self.onServerConnected()
 
     def setActions(self):
 
@@ -635,12 +636,16 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.toolToggleMotionButton.clicked.connect(self.selectToolMotion)
         self.controlBackButton.pressed.connect(lambda: self.stackedWidget.setCurrentWidget(self.homePage))
         self.setToolTempButton.pressed.connect(self.setToolTemp)
-        self.tool180PreheatButton.pressed.connect(lambda: octopiclient.gcode(command='M104 T1 S180') if self.toolToggleTemperatureButton.isChecked() else octopiclient.gcode(command='M104 T0 S180'))
+        #self.tool180PreheatButton.pressed.connect(lambda: octopiclient.gcode(command='M104 T1 S180') if self.toolToggleTemperatureButton.isChecked() else octopiclient.gcode(command='M104 T0 S180'))
         #self.tool220PreheatButton.pressed.connect(lambda: octopiclient.gcode(command='M104 T1 S220') if self.toolToggleTemperatureButton.isChecked() else octopiclient.gcode(command='M104 T0 S220'))
-        self.tool250PreheatButton.pressed.connect(lambda: octopiclient.gcode(command='M104 T1 S250') if self.toolToggleTemperatureButton.isChecked() else octopiclient.gcode(command='M104 T0 S250'))
+        #self.tool250PreheatButton.pressed.connect(lambda: octopiclient.gcode(command='M104 T1 S250') if self.toolToggleTemperatureButton.isChecked() else octopiclient.gcode(command='M104 T0 S250'))
+        self.tool180PreheatButton.pressed.connect(lambda: self.preheatToolTemp(180))
+        self.tool250PreheatButton.pressed.connect(lambda: self.preheatToolTemp(250))
         self.setBedTempButton.pressed.connect(lambda: octopiclient.setBedTemperature(self.bedTempSpinBox.value()))
-        self.bed60PreheatButton.pressed.connect(lambda: octopiclient.setBedTemperature(target=60))
-        self.bed100PreheatButton.pressed.connect(lambda: octopiclient.setBedTemperature(target=100))
+        #self.bed60PreheatButton.pressed.connect(lambda: octopiclient.setBedTemperature(target=60))
+        #self.bed100PreheatButton.pressed.connect(lambda: octopiclient.setBedTemperature(target=100))
+        self.bed60PreheatButton.pressed.connect(lambda: self.preheatBedTemp(60))
+        self.bed100PreheatButton.pressed.connect(lambda: self.preheatBedTemp(100))
 
 
 
@@ -1628,8 +1633,8 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         if temperature['tool1Target'] == 0:
             self.tool1TempBar.setMaximum(300)
             self.tool1TempBar.setStyleSheet(styles.bar_heater_cold)
-        elif temperature['tool1Actual'] <= temperature['tool0Target']:
-            self.tool1TempBar.setMaximum(temperature['tool0Target'])
+        elif temperature['tool1Actual'] <= temperature['tool1Target']:
+            self.tool1TempBar.setMaximum(temperature['tool1Target'])
             self.tool1TempBar.setStyleSheet(styles.bar_heater_heating)
         else:
             self.tool1TempBar.setMaximum(temperature['tool1Actual'])
@@ -1891,6 +1896,17 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
             octopiclient.gcode(command='M104 T0 S' + str(self.toolTempSpinBox.value()))
             # octopiclient.setToolTemperature({"tool0": self.toolTempSpinBox.value()})
 
+    def preheatToolTemp(self, temp):
+        if self.toolToggleTemperatureButton.isChecked():
+            octopiclient.gcode(command='M104 T1 S' + str(temp))
+        else:
+            octopiclient.gcode(command='M104 T0 S' + str(temp))
+        self.toolTempSpinBox.setProperty("value", temp)
+
+    def preheatBedTemp(self, temp):
+        octopiclient.gcode(command='M140 S' + str(temp))
+        self.bedTempSpinBox.setProperty("value", temp)
+
     def coolDownAction(self):
         ''''
         Turns all heaters and fans off
@@ -1916,11 +1932,14 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.currentZPosition = offset #gets the current z position, used to set new tool offsets.
         # clean this shit up.
         #fuck you past vijay for not cleaning this up
-        if self.setNewToolZOffsetFromCurrentZBool:
-            newToolOffsetZ = float(self.toolOffsetZ) - float(self.currentZPosition)
-            octopiclient.gcode(command='M218 T1 Z{}'.format(newToolOffsetZ))  # restore eeprom settings to get Z home offset, mesh bed leveling back
-            self.setNewToolZOffsetFromCurrentZBool =False
-            octopiclient.gcode(command='M500')  # store eeprom settings to get Z home offset, mesh bed leveling back
+        try:
+            if self.setNewToolZOffsetFromCurrentZBool:
+                newToolOffsetZ = float(self.toolOffsetZ) - float(self.currentZPosition)
+                octopiclient.gcode(command='M218 T1 Z{}'.format(newToolOffsetZ))  # restore eeprom settings to get Z home offset, mesh bed leveling back
+                self.setNewToolZOffsetFromCurrentZBool =False
+                octopiclient.gcode(command='M500')  # store eeprom settings to get Z home offset, mesh bed leveling back
+        except Exception as e:
+                    print("error: " + str(e))
 
     def showProbingFailed(self):
         self.tellAndReboot("Bed position is not calibrated. Please run calibration wizard after restart.")
@@ -2000,14 +2019,14 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         self.toolZOffsetCaliberationPageCount = 0
         octopiclient.gcode(command='M104 S200') # BEFORE S200
         octopiclient.gcode(command='M104 T1 S200')
-        octopiclient.gcode(command='M104 T0 S200') # BEFORE M104 T1 S200
-        octopiclient.gcode(command='M211 S0')  # Disable software endstop
+        #octopiclient.gcode(command='M104 T0 S200') # BEFORE M104 T1 S200
+        #octopiclient.gcode(command='M211 S0')  # Disable software endstop
         octopiclient.gcode(command='T0')  # Set active tool to t0
         #octopiclient.gcode(command='M503')  # makes sure internal value of Z offset and Tool offsets are stored before erasing
         octopiclient.gcode(command='M420 S0')  # Dissable mesh bed leveling for good measure
         self.stackedWidget.setCurrentWidget(self.quickStep1Page)
-        # octopiclient.home(['x', 'y', 'z'])
-        octopiclient.gcode(command='G28')
+        octopiclient.home(['x', 'y', 'z'])
+        #octopiclient.gcode(command='G28')
         octopiclient.jog(x=76, y=40, absolute=True, speed=2000)
 
     def quickStep2(self):
@@ -2060,6 +2079,7 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
             octopiclient.gcode(command='G92 Z0')#set the current Z position to zero
             octopiclient.jog(z=1, absolute=True, speed=1500)
             octopiclient.gcode(command='T1')
+            octopiclient.jog(x=calibrationPosition['X4'], y=calibrationPosition['Y4'], absolute=True, speed=2000)
             self.toolZOffsetCaliberationPageCount = 2
         else:
             self.doneStep()
@@ -2075,8 +2095,8 @@ class MainUiClass(QtWidgets.QMainWindow, mainGUI.Ui_MainWindow):
         octopiclient.gcode(command='T0')
         #octopiclient.gcode(command='M211 S1')  # Disable software endstop
         self.stackedWidget.setCurrentWidget(self.calibratePage)
-        # octopiclient.home(['x', 'y', 'z'])
-        octopiclient.gcode(command='G28')
+        octopiclient.home(['x', 'y', 'z'])
+        #octopiclient.gcode(command='G28')
         octopiclient.gcode(command='M104 S0')
         octopiclient.gcode(command='M104 T0 S0')
         octopiclient.gcode(command='M104 T1 S0')
@@ -2308,7 +2328,7 @@ class QtWebsocket(QtCore.QThread):
                     #     self.emit(QtCore.SIGNAL('SET_Z_HOME_OFFSET'), item[item.index('Z') + 2:].split(' ', 1)[0],
                     #               False)
                     if 'Count' in item:  # can get thris throught the positionUpdate event
-                        self.set_z_tool_offset_signal.emit(item[item.index('Z') + 2:].split(' ', 1)[0],
+                        self.set_z_tool_offset_signal.emit(item[item.index('z') + 2:].split(',', 1)[0], #klipper update for M114
                                   False)
                     if 'M218' in item:
                         self.tool_offset_signal.emit(item[item.index('M218'):])
@@ -2391,22 +2411,26 @@ class ThreadSanityCheck(QtCore.QThread):
                     break
                 octopiclient = octoprintAPI(ip, apiKey)
                 if not self.virtual:
-                    result = subprocess.Popen("dmesg | grep 'ttyUSB'", stdout=subprocess.PIPE, shell=True).communicate()[0]
+                    result = subprocess.Popen("dmesg | grep 'ttyACM\|ttyUSB'", stdout=subprocess.PIPE, shell=True).communicate()[0]
                     result = result.split(b'\n')  # each ssid and pass from an item in a list ([ssid pass,ssid paas])
                     print(result)
                     result = [s.strip() for s in result]
                     for line in result:
                         if b'FTDI' in line:
-                            self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'tty3') + 7].decode('utf-8')
-                            print(self.MKSPort)
+                            #self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'tty3') + 7].decode('utf-8')
+                            #print(self.MKSPort)
+                            self.klipperMCUConnected = True
                         if b'ch34' in line:
-                            self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'tty3') + 7].decode('utf-8')
-                            print(self.MKSPort)
+                            #self.MKSPort = line[line.index(b'ttyUSB'):line.index(b'tty3') + 7].decode('utf-8')
+                            #print(self.MKSPort)
+                            self.klipperMCUConnected = True
+                        if b'ACM' in line:
+                            self.klipperMCUConnected = True
 
-                    if not self.MKSPort:
+                    if not self.klipperMCUConnected:
                         octopiclient.connectPrinter(port="VIRTUAL", baudrate=115200)
                     else:
-                        octopiclient.connectPrinter(port="/dev/" + self.MKSPort, baudrate=115200)
+                        octopiclient.connectPrinter(port="/tmp/printer", baudrate=250000)
                 break
             except Exception as e:
                 time.sleep(1)
