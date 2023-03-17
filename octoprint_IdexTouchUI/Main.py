@@ -2430,7 +2430,7 @@ class ThreadSanityCheck(QtCore.QThread):
                     if not self.klipperMCUConnected:
                         octopiclient.connectPrinter(port="VIRTUAL", baudrate=115200)
                     else:
-                        octopiclient.connectPrinter(port="/tmp/printer", baudrate=250000)
+                        octopiclient.connectPrinter(port="/tmp/printer", baudrate=115200)
                 break
             except Exception as e:
                 time.sleep(1)
