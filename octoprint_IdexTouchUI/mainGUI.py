@@ -4133,7 +4133,7 @@ class Ui_MainWindow(object):
         self.toolOffsetZDoubleSpinBox.setAccelerated(True)
         self.toolOffsetZDoubleSpinBox.setDecimals(2)
         self.toolOffsetZDoubleSpinBox.setMinimum(-10.0)
-        self.toolOffsetZDoubleSpinBox.setMaximum(-10.0)
+        self.toolOffsetZDoubleSpinBox.setMaximum(10.0)
         self.toolOffsetZDoubleSpinBox.setSingleStep(0.05)
         self.toolOffsetZDoubleSpinBox.setProperty("value", -10.0)
         self.toolOffsetZDoubleSpinBox.setObjectName("toolOffsetZDoubleSpinBox")
